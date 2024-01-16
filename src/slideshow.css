@@ -1,0 +1,902 @@
+/**
+ *********************************************************
+ *
+ * This CSS is a bit dirty.
+ * Due to the very specific nature of this experiment
+ * (Making it a powerpoint-like slideshow)
+ * it might be exhibit accessibility issues
+ *
+ * NB. This style support "dark mode" user preference 
+ */
+
+
+
+/**
+ *********************************************************
+ * Reset 
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/**
+  *********************************************************
+  * Configuration 
+  */
+
+:root {
+
+  /* Colors */
+
+  --color-environment: #ffffff;
+  --color-background: #ebebeb;
+  --color-primary: #972200;
+  --color-secondary: #007ea5;
+  --color-text: #444444;
+  --color-shadow: #00000054;
+  --color-link-on-background-nav-button: #ffffff;
+  --color-background-tag: var(--color-environment);
+  --color-link: var(--color-primary);
+  --color-background-call-to-action-button: var(--color-primary);
+  --color-link-on-call-to-action-button: var(--color-environment);
+  --color-background-nav-button: var(--color-secondary);
+  --color-scrollbar-h: var(--color-primary);
+  --color-scrollbar-v: var(--color-text);
+
+  --background-blend-mode: difference;
+
+  /* Typography */
+
+  --font-family: Inter, Roboto, -apple-system, system-ui, BlinkMacSystemFont, ui-sans-serif, "Segoe UI", "San Francisco", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-condensed: "AvenirNextCondensed-Bold", "Futura-CondensedExtraBold", HelveticaNeue-CondensedBold, "Ubuntu Condensed", "Liberation Sans Narrow", "Franklin Gothic Demi Cond", "Arial Narrow", sans-serif-condensed, Arial, "Trebuchet MS", "Lucida Grande", Tahoma, Verdana, sans-serif;
+
+  --font-size-h1: 6rem;
+  --font-size-h2: 4rem;
+  --font-size-h3: 3rem;
+  --font-size-h4: 2rem;
+  --font-size-text: 1.5rem;
+
+  --size-scrollbar: 17px;
+
+  --padding-body: 1em;
+}
+
+/**
+  *********************************************************
+  * Layout 
+  */
+
+html {
+  overflow: hidden;
+}
+
+body {
+  position: static;
+  width: auto;
+  max-width: 100vw;
+  height: auto;
+  max-height: 100vh;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding: var(--padding-body);
+}
+
+html {
+  position: fixed;
+}
+
+/* Grids */
+
+body,
+main>.container,
+article {
+  display: grid;
+  gap: 2em;
+  /* can be changed without breaking anything */
+}
+
+main>.container,
+article {
+  width: auto;
+}
+
+body {
+  grid-template-columns: 1fr 6fr 1fr 1fr 1fr 1fr;
+  /* add one for the sponsor aside footer... */
+}
+
+main>.container {
+  grid-template-columns: 2fr 1fr 3fr;
+}
+
+article:nth-child(1) {
+  grid-template-columns: 1fr 1fr;
+}
+
+article:nth-child(2) {
+  grid-template-columns: 1fr;
+}
+
+article:nth-child(3) {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Grids "leaf" elements */
+
+header>.container,
+article>.container,
+aside>.container,
+footer>.container {
+  width: calc(100vw - 2 * var(--padding-body));
+  height: calc(100vh - 2 * var(--padding-body) - var(--size-scrollbar));
+  overflow-y: auto;
+}
+
+
+body>header>.container::before,
+body>header>.container::after,
+article>.container::before,
+article>.container::after,
+aside>.container::before,
+aside>.container::after,
+footer>.container::before,
+footer>.container::after {
+  content: "";
+  margin: auto;
+}
+
+body>header>.container,
+article>.container:not(article#about > .container),
+aside>.container,
+footer>.container {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+/* Navigation elements */
+
+body>a:first-child,
+nav {
+  z-index: 1;
+  position: absolute;
+  bottom: 1.5em;
+}
+
+body>a:first-child {
+  display: block;
+}
+
+body>a:first-child {
+  left: -1em;
+}
+
+nav {
+  right: -1em;
+}
+
+nav ul {
+  display: grid;
+  width: 100%;
+  gap: 0.5em;
+  grid-template-rows: repeat(6, min-content);
+}
+
+nav li {
+  display: block;
+}
+
+article#about li {
+  display: inline-block;
+}
+
+footer ul {
+  display: grid;
+  width: 100%;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
+  margin: 0 0 1em 0;
+}
+
+footer li {
+  display: inline-block;
+  margin: 0;
+}
+
+footer li a {
+  display: inline-block;
+  width: 100%;
+}
+
+article li,
+aside li {
+  margin-left: 1em;
+}
+
+a.link-allstyles,
+.container>a:last-child,
+footer#files a,
+footer li {
+  display: inline-block;
+}
+
+a.link-allstyles,
+.container>a:last-child,
+footer#files a {
+  margin: 1em 0 1em 1em;
+}
+
+blockquote {
+  margin-bottom: 1em;
+  margin-right: -2em;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin-bottom: 0.65em;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+/**
+  *********************************************************
+  * "Components" styles
+  */
+
+/* Content cards/slides */
+
+header>.container,
+article>.container,
+aside>.container,
+footer>.container {
+  --pad: max(0px, calc(calc(100vw - 3em - 1em - 1024px) / 2));
+  padding: 1em calc(3em + var(--pad)) 0em calc(1em + var(--pad));
+  border: 1px solid gray;
+  box-shadow: 6px 6px 8px #00000054;
+  /*  transform: skew(-1deg);*/
+}
+
+/* Call to action */
+
+a.link-allstyles,
+.container>a:last-child,
+footer#files a,
+footer li a {
+  padding: 0.5em;
+  border: 1px solid gray;
+  transform: skew(-10deg);
+  font-family: var(--font-family-condensed);
+}
+
+/* Content cards tags */
+
+article#about li {
+  border: 1px solid gray;
+  padding: 0.1em 0.5em;
+  margin: 0 0.1em 0.3em 0;
+  border-radius: 0.7em;
+}
+
+/* Navigation buttons */
+
+nav li,
+body>a:first-child {
+  padding: 0.5em;
+  border: 1px solid gray;
+  transform: skew(-10deg);
+  font-family: var(--font-family-condensed);
+}
+
+nav li {
+  padding-right: 1.5em;
+  box-shadow: -6px 6px 8px #00000054;
+}
+
+body>a:first-child {
+  padding-left: 1.5em;
+  box-shadow: 6px 6px 8px #00000054;
+}
+
+/* Misc */
+
+blockquote {
+  border: 1px dashed gray;
+  padding: 0.5em;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+@media (min-width: 1200px) {
+  blockquote {
+    float: right;
+    width: calc(30% + 2em);
+    margin-left: 1em;
+  }
+}
+
+/**
+  *********************************************************
+  * Colors 
+  */
+
+html {
+  background-color: var(--color-environment);
+}
+
+body {
+  color: var(--color-text);
+  background-color: var(--color-environment);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-primary);
+}
+
+/* Grids elements */
+
+header>.container,
+article>.container,
+aside>.container,
+footer>.container {
+  background-color: var(--color-background);
+  border-color: gray;
+}
+
+article#about li {
+  background-color: var(--color-background-tag);
+}
+
+/* Navigation buttons */
+
+body>a:first-child,
+nav li {
+  background-color: var(--color-background-nav-button);
+  border-color: gray;
+}
+
+body>a:first-child,
+body>a:first-child:visited,
+body>a:first-child:hover,
+nav li a,
+nav li a:visited,
+nav li a:hover {
+  color: var(--color-link-on-background-nav-button);
+}
+
+/* Content tags */
+
+article li {
+  border-color: gray;
+}
+
+/* Call to action */
+
+a.link-allstyles,
+.container>a:last-child,
+footer#files a,
+footer li a {
+  color: var(--color-link-on-call-to-action-button);
+  background-color: var(--color-background-call-to-action-button);
+  border-color: gray;
+}
+
+a.link-allstyles:visited,
+.container>a:last-child:visited,
+footer#files a:visited,
+footer li a:visited {
+  color: var(--color-link-on-call-to-action-button);
+}
+
+a,
+a:visited {
+  color: var(--color-link);
+}
+
+a:hover {
+  color: var(--color-text);
+}
+
+a.link-allstyles:hover,
+.container>a:last-child:hover,
+footer#files a:hover,
+footer li a:hover {
+  color: var(--color-link-on-call-to-action-button);
+}
+
+/* Misc */
+
+blockquote {
+  color: var(--color-primary);
+  border-color: gray;
+}
+
+/**
+  *********************************************************
+  * Typography 
+  */
+
+body {
+  line-height: 1.5em;
+  font-family: var(--font-family);
+  font-size: clamp(1rem, 3vw, var(--font-size-text));
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: bold;
+  line-height: 1;
+}
+
+h1 {
+  font-weight: bolder;
+  font-family: var(--font-family-condensed);
+  font-size: var(--font-size-h1);
+  font-size: clamp(2rem, 7vw, var(--font-size-h1));
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-size: clamp(2rem, 4vw, var(--font-size-h2));
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-size: clamp(2rem, 3vw, var(--font-size-h3));
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+  font-size: clamp(2rem, 3vw, var(--font-size-h4));
+}
+
+a,
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/**
+  *********************************************************
+  * Scrollbars
+  */
+
+/* Body */
+
+body {
+  scrollbar-width: var(--size-scrollbar);
+}
+
+body::-webkit-scrollbar {
+  width: var(--size-scrollbar);
+}
+
+body {
+  scrollbar-color: var(--color-scrollbar-h) var(--color-environment);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-h);
+}
+
+body::-webkit-scrollbar-track {
+  background-color: var(--color-environment);
+}
+
+/* Grids elements */
+
+header>.container,
+article>.container,
+aside>.container,
+footer>.container {
+  scrollbar-width: var(--size-scrollbar);
+}
+
+header>.container::-webkit-scrollbar,
+article>.container::-webkit-scrollbar,
+aside>.container::-webkit-scrollbar,
+footer>.container::-webkit-scrollbar {
+  width: var(--size-scrollbar);
+}
+
+header>.container,
+article>.container,
+aside>.container,
+footer>.container {
+  scrollbar-color: var(--color-scrollbar-v) var(--color-background);
+}
+
+header>.container::-webkit-scrollbar-thumb,
+article>.container::-webkit-scrollbar-thumb,
+aside>.container::-webkit-scrollbar-thumb,
+footer>.container::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-v);
+}
+
+header>.container::-webkit-scrollbar-track,
+article>.container::-webkit-scrollbar-track,
+aside>.container::-webkit-scrollbar-track,
+footer>.container::-webkit-scrollbar-track {
+  background-color: var(--color-background);
+}
+
+/**
+  *********************************************************
+  * Scrolling 
+  */
+
+/* I would prefer progressive enhancement, but the reset is useful and I'm lazy */
+
+body {
+  scroll-snap-type: x mandatory;
+  scroll-padding: 1em;
+  scroll-behavior: smooth;
+}
+
+header>.container,
+article>.container,
+aside>.container,
+footer>.container {
+  scroll-snap-align: start;
+}
+
+/**
+  *********************************************************
+  * Misc 
+  */
+
+/* the star SVG */
+
+a {
+  position: relative;
+  display: inline-block;
+}
+
+svg {
+  width: 1em;
+  float: right;
+  margin-left: 0.5em;
+}
+
+/* Animations */
+/* I would prefer progressive enhancement, but the reset is useful and I'm lazy */
+
+a:hover:not(footer li a) {
+  transform: rotate(-2deg);
+  transition: transform 0.1s ease-in-out;
+}
+
+body>a:first-child:hover,
+nav li:hover {
+  transform: rotate(-2deg) skew(-10deg);
+  transition: transform 0.1s ease-in-out;
+}
+
+a.link-allstyles:hover,
+.container>a:last-child:hover,
+footer#files a:hover,
+footer li a:hover {
+  /*
+   transform: scale(1.05) skew(-10deg);
+   transition: transform 0.3s ease-in-out;
+   */
+  text-decoration: none;
+
+  /* (c) Thiago Marques (modified) */
+  background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
+  animation: animation-background-position 5s linear alternate infinite;
+}
+
+@keyframes animation-background-position {
+  to {
+    background-position: 20vw;
+  }
+}
+
+/**
+  *********************************************************
+  * Accessibility
+  */
+
+/* Remove all animations and transitions for people that prefer not to see them */
+/* I would prefer progressive enhancement, but the reset is useful and I'm lazy */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    -webkit-animation-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+    animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/**
+  *********************************************************
+  * Wide screens 
+  */
+
+@media (min-width: 56rem) {
+  nav ul {
+    grid-template-rows: unset;
+    grid-template-columns: repeat(6, max-content);
+  }
+
+  nav li {
+    padding-right: 0.5em;
+  }
+
+  nav li:last-child {
+    padding-right: 1.5em;
+  }
+
+  #guidelines .container {
+    --pad: 0em;
+    /* this page is particulary big */
+  }
+
+  /*#guidelines h3 {
+    position: relative !important;
+    left: 80vw;
+    top: -2em;
+    transform: rotate(40deg);
+    height: 0;
+    margin: 0;
+   }*/
+}
+
+/**
+  *********************************************************
+  * Add a background image
+  */
+
+header .container,
+article .container,
+aside .container,
+footer .container {
+  background-position: right 2em bottom 2em;
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-blend-mode: var(--background-blend-mode);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23dddddd11' d='M32 12.408l-11.056-1.607-4.944-10.018-4.944 10.018-11.056 1.607 8 7.798-1.889 11.011 9.889-5.199 9.889 5.199-1.889-11.011 8-7.798z'/%3E%3C/svg%3E");
+}
+
+
+
+/**
+  *********************************************************
+  * Adjust zoom on some pages
+  */
+
+#guidelines p {
+  zoom: 0.8;
+  line-height: 1.5;
+}
+
+#about p {
+  zoom: 0.9;
+}
+
+
+
+/**
+  *********************************************************
+  * External links indicator
+  */
+
+a:not(:has(img, picture, video, audio, svg))[href^="//"]:after,
+a:not(:has(img, picture, video, audio, svg))[href^="http"]:after,
+a:not(:has(img, picture, video, audio, svg)).external:after {
+
+  display: inline;
+  position: static;
+  transform: unset;
+
+  content: "🡵";
+  white-space: nowrap;
+  font-size: 0.5em;
+  line-height: 1em;
+  font-weight: lighter;
+
+  color: var(--text-color);
+  opacity: 0.3;
+
+  -webkit-text-fill-color: currentColor;
+
+  border: 1px solid currentColor;
+  border-radius: 3px;
+
+  vertical-align: middle;
+  margin-inline: 0.5em 0.2em;
+  margin-block: 0;
+  padding: 0.2em 0.2em;
+}
+
+a:not(:has(img, picture, video, audio, svg))[href^="//"]:hover:after,
+a:not(:has(img, picture, video, audio, svg))[href^="http"]:hover:after,
+a:not(:has(img, picture, video, audio, svg)).external:hover:after {
+
+  text-decoration: none;
+  opacity: 1.0;
+}
+
+
+
+/**
+  *********************************************************
+  * Dark mode
+  */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-environment: #222222;
+    --color-background: #444444;
+    --color-primary: #ffaa21;
+    --color-secondary: #009bcb;
+    --color-text: #dddddd;
+    --background-blend-mode: normal;
+  }
+}
+
+
+
+/**
+  *********************************************************
+  * SPONSOR FOOTER IS NOT COMPATIBLE WITH THIS DESIGN 
+  */
+
+#sponsor-footer,
+#sponsor-footer * {
+  background-color: unset !important;
+  margin: unset !important;
+  margin-right: unset !important;
+  margin-left: unset !important;
+  margin-bottom: unset !important;
+  padding: unset !important;
+  border: unset !important;
+  border-radius: unset !important;
+  width: unset !important;
+  max-width: unset !important;
+  height: unset !important;
+  min-height: unset !important;
+  text-align: unset !important;
+  grid-column-start: unset !important;
+  grid-column-end: unset !important;
+  display: unset !important;
+  align-items: unset !important;
+  color: unset !important;
+  font-size: unset !important;
+  font-family: unset !important;
+  -webkit-text-stroke: unset !important;
+  text-shadow: unset !important;
+  justify-content: unset !important;
+  transition: unset !important;
+  line-height: unset !important;
+  text-decoration: unset !important;
+  background-color: unset !important;
+  box-shadow: unset !important;
+  text-transform: unset !important;
+  flex-wrap: unset !important;
+}
+
+#sponsor-footer p {
+  width: calc(100vw - 2 * var(--padding-body)) !important;
+  height: calc(100vh - 2 * var(--padding-body) - var(--size-scrollbar)) !important;
+  overflow-y: auto !important;
+
+  --pad: max(0px, calc(calc(100vw - 3em - 1em - 1024px) / 2));
+  padding: 1em calc(3em + var(--pad)) 0em calc(1em + var(--pad)) !important;
+  border: 1px solid gray !important;
+  box-shadow: 6px 6px 8px #00000054 !important;
+  transform: skew(-1deg) !important;
+
+  background-color: var(--color-background) !important;
+  border-color: gray !important;
+
+  scroll-snap-align: start !important;
+}
+
+
+#sponsor-footer p {
+  display: flex !important;
+  flex-flow: column !important;
+  align-items: flex-start !important;
+  /*
+  text-align: center !important;*/
+}
+
+#sponsor-footer p::before,
+#sponsor-footer p::after {
+  display: block !important;
+  content: " " !important;
+  margin: auto !important;
+}
+
+#sponsor-footer a {
+  padding: 0.5em !important;
+  border: 1px solid gray !important;
+  transform: skew(-10deg) !important;
+  font-family: var(--font-family-condensed) !important;
+  display: inline-block !important;
+  margin: 1em 0 1em 1em !important;
+  color: var(--color-link-on-call-to-action-button) !important;
+  background-color: var(--color-background-call-to-action-button) !important;
+  border-color: gray !important;
+  text-decoration: none !important;
+}
+
+#sponsor-footer a:visited {
+  color: var(--color-link-on-call-to-action-button) !important;
+  text-decoration: none !important;
+}
+
+#sponsor-footer a:hover {
+  text-decoration: underline !important;
+  background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%) !important;
+  animation: animation-background-position 5s linear alternate infinite !important;
+}
+
+#sponsor-footer p {
+  scrollbar-width: var(--size-scrollbar) !important;
+}
+
+#sponsor-footer p::-webkit-scrollbar {
+  width: var(--size-scrollbar) !important;
+}
+
+#sponsor-footer p {
+  scrollbar-color: var(--color-scrollbar-v) var(--color-background) !important;
+}
+
+#sponsor-footer p::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-v) !important;
+}
+
+#sponsor-footer p::-webkit-scrollbar-track {
+  background-color: var(--color-background) !important;
+}
+
+/**
+ * Get rid of that
+ * We are navigating this slideshow with arrow keys
+ * And so are conflicting with browser selected elements 
+ * that have a visual outline we don't want **in this very specific context**
+ */
+
+*:focus-visible {
+  outline: none;
+}
+
+/**
+ * Add an indication on how to use this style
+ */
+h1:after {
+  content: "SLIDESHOW MODE / Go fullscreen and Use left & right arrow keys to navigate";
+  display: block;
+  font-size: 1.1rem;
+  text-transform: none;
+  color: white;
+  text-align: center;
+  font-weight: normal;
+}
